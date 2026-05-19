@@ -6,7 +6,7 @@
 #   (so a failed `up` doesn't leave the catalog pointing at a missing container).
 # - Notifies Discord only on real changes or failures.
 
-set -uo pipefail
+set -euo pipefail
 
 WHISPER_DIR="/home/marcus/whisper.cpp"
 MCP_DIR="/home/marcus/mcp-whisper"

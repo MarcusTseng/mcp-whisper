@@ -45,7 +45,7 @@ write a file to `OUTPUT_DIR` and return its path; `text`/`json` return inline.
 ### Run
 
 ```bash
-git clone https://github.com/<you>/mcp-whisper
+git clone https://github.com/MarcusTseng/mcp-whisper
 cd mcp-whisper
 
 # Generate auth token
