@@ -11,9 +11,17 @@ set -uo pipefail
 WHISPER_DIR="/home/marcus/whisper.cpp"
 MCP_DIR="/home/marcus/mcp-whisper"
 LOG="${MCP_DIR}/update.log"
-WEBHOOK="REDACTED"
 
 export PATH="/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin"
+
+# Load DISCORD_WEBHOOK_URL (and anything else) from .env without leaking it to the log.
+if [[ -f "$MCP_DIR/.env" ]]; then
+    set -a
+    # shellcheck disable=SC1091
+    source "$MCP_DIR/.env"
+    set +a
+fi
+WEBHOOK="${DISCORD_WEBHOOK_URL:-}"
 
 stamp() { date -Is; }
 log()   { echo "[$(stamp)] $*" | tee -a "$LOG"; }
@@ -26,6 +34,10 @@ note_error()   { ERRORS+=("$1");  log "ERROR : $1"; }
 
 notify_discord() {
     local title="$1" color="$2" body="$3"
+    if [[ -z "$WEBHOOK" ]]; then
+        log "WARN: DISCORD_WEBHOOK_URL not set; skipping Discord notification"
+        return 0
+    fi
     local payload
     payload=$(python3 -c '
 import json, sys
