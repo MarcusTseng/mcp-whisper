@@ -1,0 +1,32 @@
+services:
+  mcp-whisper-http:
+    image: mcp-whisper:latest
+    container_name: mcp-whisper-http
+    restart: unless-stopped
+    user: "1000:1000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    ports:
+      - "8083:8083"
+    environment:
+      TRANSPORT: http
+      HOST: 0.0.0.0
+      PORT: "8083"
+      WHISPER_URL: http://host.docker.internal:8082/v1/audio/transcriptions
+      # Allowed input roots — transcribe_file paths must resolve under one of these.
+      ALLOWED_INPUT_ROOTS: /home/marcus/Downloads:/home/marcus/Music:/home/marcus/whisper.cpp/samples
+      OUTPUT_DIR: /home/marcus/Documents/Obsidian Vault/Transcripts
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Inbound audio paths (read-only, same path in container = caller-friendly).
+      - /home/marcus/Downloads:/home/marcus/Downloads:ro
+      - /home/marcus/Music:/home/marcus/Music:ro
+      - /home/marcus/whisper.cpp/samples:/home/marcus/whisper.cpp/samples:ro
+      # Output destination (read-write) — lands in the Obsidian vault.
+      - "/home/marcus/Documents/Obsidian Vault/Transcripts:/home/marcus/Documents/Obsidian Vault/Transcripts"
+    labels:
+      com.docker.compose.project: mcp-whisper

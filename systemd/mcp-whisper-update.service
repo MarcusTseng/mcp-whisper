@@ -1,0 +1,9 @@
+[Unit]
+Description=Weekly update for whisper.cpp + mcp-whisper stack
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/marcus/mcp-whisper/update.sh
+TimeoutStartSec=30min

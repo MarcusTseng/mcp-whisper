@@ -1,0 +1,11 @@
+[Unit]
+Description=Trigger weekly whisper/mcp-whisper update (Sun 04:00)
+
+[Timer]
+OnCalendar=Sun *-*-* 04:00:00
+Persistent=true
+RandomizedDelaySec=15min
+Unit=mcp-whisper-update.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,35 @@
+name: whisper-transcribe
+type: server
+image: mcp-whisper:latest
+description: Transcribe audio from local files, URLs, YouTube, or RSS podcasts via local whisper.cpp (Vulkan/AMD). Writes md/srt/vtt outputs into the local Obsidian vault.
+title: Whisper Transcribe
+# Narrow read-only mounts for inputs; one RW mount for outputs.
+volumes:
+  - "/home/marcus/Downloads:/home/marcus/Downloads:ro"
+  - "/home/marcus/Music:/home/marcus/Music:ro"
+  - "/home/marcus/whisper.cpp/samples:/home/marcus/whisper.cpp/samples:ro"
+  - "/home/marcus/Documents/Obsidian Vault/Transcripts:/home/marcus/Documents/Obsidian Vault/Transcripts"
+env:
+  - name: WHISPER_URL
+    value: "http://host.docker.internal:8082/v1/audio/transcriptions"
+  - name: ALLOWED_INPUT_ROOTS
+    value: "/home/marcus/Downloads:/home/marcus/Music:/home/marcus/whisper.cpp/samples"
+  - name: OUTPUT_DIR
+    value: "/home/marcus/Documents/Obsidian Vault/Transcripts"
+extra-hosts:
+  - "host.docker.internal:host-gateway"
+tools:
+  - name: transcribe_file
+    description: Transcribe a local audio/video file path on the StrixHalo host (path must be under an allowed input root).
+  - name: transcribe_url
+    description: Transcribe audio from an http(s) URL (public hosts only).
+  - name: transcribe_youtube
+    description: Transcribe a YouTube video (extracts audio via yt-dlp).
+  - name: transcribe_podcast
+    description: Transcribe an episode from a podcast RSS feed.
+metadata:
+  category: productivity
+  tags:
+    - audio
+    - transcription
+    - whisper
