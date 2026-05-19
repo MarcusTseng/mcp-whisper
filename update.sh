@@ -16,9 +16,10 @@ export PATH="/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin"
 
 # Load DISCORD_WEBHOOK_URL (and anything else) from .env without leaking it to the log.
 if [[ -f "$MCP_DIR/.env" ]]; then
+    # Strip Windows CRLF before sourcing to prevent \r in variable values.
     set -a
     # shellcheck disable=SC1091
-    source "$MCP_DIR/.env"
+    source <(tr -d '\r' < "$MCP_DIR/.env")
     set +a
 fi
 WEBHOOK="${DISCORD_WEBHOOK_URL:-}"
